@@ -45,13 +45,19 @@ func getRoot(w http.ResponseWriter, r *http.Request){
       return;
     }
     if (r.URL.Query().Has("x") && r.URL.Query().Has("y")) {
-      x := r.URL.Query().Get("x");
-      y := r.URL.Query().Get("y");
-      if (x == "OoB" || y == "OoB") {
+      x, err := strconv.Atoi(r.URL.Query().Get("x"));
+      if err != nil {
+        return;
+      }
+      y, err := strconv.Atoi(r.URL.Query().Get("y"));
+      if err != nil {
+        return;
+      }
+      if (x == 0 || y == 0) {
         WriteAndPrint(w, fmt.Sprint(p + " ERROR: SELECTED POSITION OUT OF RANGE!"));
         return;
       }
-      WriteAndPrint(w, fmt.Sprint(p + " moved to position " + x + ", " + y + "!"));
+      WriteAndPrint(w, fmt.Sprint(p + " moved to position " + strconv.Itoa(x) + ", " + strconv.Itoa(y) + "!"));
       return;
     }
     activePlayers++;

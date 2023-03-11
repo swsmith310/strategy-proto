@@ -1,6 +1,7 @@
 import pygame
 import requests
 import sys
+from colors import COLORS
 
 SERVER = sys.argv[1]
 
@@ -54,9 +55,9 @@ while running:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]
             if (player_one.active):
-                x = int(mouseX / BLOCK_SIZE) if abs(player_one.x - int(mouseX / BLOCK_SIZE)) <= player_one.range else "OoB"
-                y = int(mouseY / BLOCK_SIZE) if abs(player_one.y - int(mouseY / BLOCK_SIZE)) <= player_one.range else "OoB"
-                if x != "OoB" and y != "OoB":
+                x = int(mouseX / BLOCK_SIZE) if abs(player_one.x - int(mouseX / BLOCK_SIZE)) <= player_one.range else 0 
+                y = int(mouseY / BLOCK_SIZE) if abs(player_one.y - int(mouseY / BLOCK_SIZE)) <= player_one.range else 0
+                if x != 0 and y != 0:
                     player_one.move(x, y)
                 print(requests.get(F"http://{SERVER}/?player={player_one.name}&x={x}&y={y}").text)
             if (player_one.isClicked(pygame.mouse.get_pos())):
@@ -68,10 +69,10 @@ while running:
                 print(requests.get(F"http://{SERVER}/?player={player_two.name}&clicked=True&active={player_two.active}").text)
                 break
 
-    screen.fill((0x12,0x12,0x12))
+    screen.fill(COLORS["BLACK"])
     for x in range(int(SCREEN_SIZE[0]/BLOCK_SIZE)):
         for y in range(int(SCREEN_SIZE[1]/BLOCK_SIZE)):
-            pygame.draw.rect(screen, (0xE5,0xE5,0xE5), [x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE , BLOCK_SIZE], 1)
+            pygame.draw.rect(screen, COLORS["WHITE"], [x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE , BLOCK_SIZE], 1)
     player_one.draw(screen)
     player_two.draw(screen)
     pygame.display.flip()
