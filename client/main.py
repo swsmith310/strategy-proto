@@ -57,6 +57,8 @@ while running:
                 if abs(player_one.x - x) <= player_one.range and abs(player_one.y - y) <= player_one.range:
                     player_one.move(x, y)
                     print(requests.get(F"http://{SERVER}/?player={player_one.name}&x={player_one.x}&y={player_one.y}").text)
+                else:
+                    print(requests.get(F"http://{SERVER}/?player={player_one.name}&x=OoB&y=0").text)
                 break
             if (player_one.isClicked(pygame.mouse.get_pos())):
                 player_one.active = not player_one.active
