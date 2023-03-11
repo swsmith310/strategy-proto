@@ -34,6 +34,10 @@ func getRoot(w http.ResponseWriter, r *http.Request){
       WriteAndPrint(w,fmt.Sprint("Current active players: " + strconv.Itoa(activePlayers)));
       return;
     }
+    if (r.URL.Query().Has("clicked")) {
+      WriteAndPrint(w,fmt.Sprint(p + " was clicked!"));
+      return;
+    }
     activePlayers++;
     WriteAndPrint(w,fmt.Sprint(p + " has joined the game!"));
     WriteAndPrint(w,fmt.Sprint("Current active players: " + strconv.Itoa(activePlayers)));

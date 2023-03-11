@@ -13,13 +13,22 @@ class Player():
         self.name = name
         self.x = x
         self.y = y
+        self.mapX = (self.x * BLOCK_SIZE) + 4
+        self.mapY = (self.y * BLOCK_SIZE) + 4
         self.w = 32
         self.h = 32
+        self.rgb = rgb
         self.color = rgb
+        self.active = False
         print(requests.get(F"http://{SERVER}/?player={self.name}").text)
-
+    def isClicked(self, mouse):
+        return mouse[0] > self.mapX and mouse[0] < self.mapX + self.w and mouse[1] > self.mapY and mouse[1] < self.mapY + self.h
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, [(self.x * BLOCK_SIZE) + 4, (self.y * BLOCK_SIZE) + 4, self.w, self.h])  
+        if self.active:
+            self.color = (0x00, 0xFF, 0x00)
+        else:
+            self.color = self.rgb
+        pygame.draw.rect(screen, self.color, [self.mapX, self.mapY, self.w, self.h])  
     def disconnect(self):
         print(requests.get(F"http://localhost:8080/?player={self.name}&logout=True").text)
 
@@ -34,11 +43,18 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if (player_one.isClicked(pygame.mouse.get_pos())):
+                player_one.active = not player_one.active
+                print(requests.get(F"http://{SERVER}/?player={player_one.name}&clicked=True").text)
+            if (player_two.isClicked(pygame.mouse.get_pos())):
+                player_two.active = not player_two.active
+                print(requests.get(F"http://{SERVER}/?player={player_two.name}&clicked=True").text)
 
     screen.fill((0x12,0x12,0x12))
     for x in range(int(SCREEN_SIZE[0]/BLOCK_SIZE)):
         for y in range(int(SCREEN_SIZE[1]/BLOCK_SIZE)):
-            pygame.draw.rect(screen, (0xe5,0xe5,0xe5), [x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE , BLOCK_SIZE], 1)
+            pygame.draw.rect(screen, (0xE5,0xE5,0xE5), [x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE , BLOCK_SIZE], 1)
     player_one.draw(screen)
     player_two.draw(screen)
     pygame.display.flip()
