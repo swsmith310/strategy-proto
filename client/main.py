@@ -51,15 +51,14 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
+            mouseX = pygame.mouse.get_pos()[0]
+            mouseY = pygame.mouse.get_pos()[1]
             if (player_one.active):
-                x = int(pygame.mouse.get_pos()[0] / BLOCK_SIZE)
-                y = int(pygame.mouse.get_pos()[1] / BLOCK_SIZE)
-                if abs(player_one.x - x) <= player_one.range and abs(player_one.y - y) <= player_one.range:
+                x = int(mouseX / BLOCK_SIZE) if abs(player_one.x - int(mouseX / BLOCK_SIZE)) <= player_one.range else "OoB"
+                y = int(mouseY / BLOCK_SIZE) if abs(player_one.y - int(mouseY / BLOCK_SIZE)) <= player_one.range else "OoB"
+                if x != "OoB" and y != "OoB":
                     player_one.move(x, y)
-                    print(requests.get(F"http://{SERVER}/?player={player_one.name}&x={player_one.x}&y={player_one.y}").text)
-                else:
-                    print(requests.get(F"http://{SERVER}/?player={player_one.name}&x=OoB&y=0").text)
-                break
+                print(requests.get(F"http://{SERVER}/?player={player_one.name}&x={x}&y={y}").text)
             if (player_one.isClicked(pygame.mouse.get_pos())):
                 player_one.active = not player_one.active
                 print(requests.get(F"http://{SERVER}/?player={player_one.name}&clicked=True&active={player_one.active}").text)

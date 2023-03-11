@@ -47,7 +47,7 @@ func getRoot(w http.ResponseWriter, r *http.Request){
     if (r.URL.Query().Has("x") && r.URL.Query().Has("y")) {
       x := r.URL.Query().Get("x");
       y := r.URL.Query().Get("y");
-      if (x == "OoB") {
+      if (x == "OoB" || y == "OoB") {
         WriteAndPrint(w, fmt.Sprint(p + " ERROR: SELECTED POSITION OUT OF RANGE!"));
         return;
       }
