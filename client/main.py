@@ -22,6 +22,7 @@ class Player():
 
 if __name__ == "__main__":
     pygame.init()
+    pygame.display.set_caption("STRATEGY PROTO CLIENT v0.0.1a")
     screen = pygame.display.set_mode(SCREEN_SIZE)
     player_one = Player("P1",1,1, (0,0,255))
     player_two = Player("P2",14,10, (255,0,0))

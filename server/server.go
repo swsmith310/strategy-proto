@@ -8,6 +8,11 @@ import (
 
 var activePlayers = 0;
 
+func WriteAndPrint(w http.ResponseWriter, text string) {
+    io.WriteString(w,text + "\n");
+    fmt.Println(text);
+}
+
 func getRoot(w http.ResponseWriter, r *http.Request){
   fmt.Printf("/ route\n");
   io.WriteString(w,"STRATEGY PROTO SERVER v0.0.1a\n");
@@ -25,17 +30,13 @@ func getRoot(w http.ResponseWriter, r *http.Request){
     p := r.URL.Query().Get("player");
     if (r.URL.Query().Has("logout")) {
       activePlayers--;
-      io.WriteString(w,fmt.Sprint(p + " has left the game!\n"))
-      fmt.Println(fmt.Sprint(p + " has left the game!"))
-      io.WriteString(w,fmt.Sprint("Current active players: " + strconv.Itoa(activePlayers)));
-      fmt.Println(fmt.Sprint("Current active players: " + strconv.Itoa(activePlayers)));
+      WriteAndPrint(w,fmt.Sprint(p + " has left the game!"));
+      WriteAndPrint(w,fmt.Sprint("Current active players: " + strconv.Itoa(activePlayers)));
       return;
     }
     activePlayers++;
-    io.WriteString(w,fmt.Sprint(p + " has joined the game!\n"))
-    fmt.Println(fmt.Sprint(p + " has joined the game!"))
-    io.WriteString(w,fmt.Sprint("Current active players: " + strconv.Itoa(activePlayers)));
-    fmt.Println(fmt.Sprint("Current active players: " + strconv.Itoa(activePlayers)));
+    WriteAndPrint(w,fmt.Sprint(p + " has joined the game!"));
+    WriteAndPrint(w,fmt.Sprint("Current active players: " + strconv.Itoa(activePlayers)));
     return;
   }
 }
