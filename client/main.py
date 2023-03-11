@@ -1,5 +1,8 @@
 import pygame
 import requests
+import sys
+
+SERVER = sys.argv[1]
 
 SCREEN_SIZE = (640, 480)
 BLOCK_SIZE = 40
@@ -13,7 +16,7 @@ class Player():
         self.w = 32
         self.h = 32
         self.color = rgb
-        print(requests.get(F"http://localhost:8080/?player={self.name}").text)
+        print(requests.get(F"http://{SERVER}/?player={self.name}").text)
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, [(self.x * BLOCK_SIZE) + 4, (self.y * BLOCK_SIZE) + 4, self.w, self.h])  
