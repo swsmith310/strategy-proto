@@ -20,6 +20,7 @@ class Player():
         self.rgb = rgb
         self.color = rgb
         self.active = False
+        self.range = 3
         print(requests.get(F"http://{SERVER}/?player={self.name}").text)
     def isClicked(self, mouse):
         return mouse[0] > self.mapX and mouse[0] < self.mapX + self.w and mouse[1] > self.mapY and mouse[1] < self.mapY + self.h
@@ -29,6 +30,12 @@ class Player():
         else:
             self.color = self.rgb
         pygame.draw.rect(screen, self.color, [self.mapX, self.mapY, self.w, self.h])  
+    def move(self, x, y):
+        self.x = x
+        self.y = y
+        self.mapX = (x * BLOCK_SIZE) + 4
+        self.mapY = (y * BLOCK_SIZE) + 4
+        self.active = False
     def disconnect(self):
         print(requests.get(F"http://localhost:8080/?player={self.name}&logout=True").text)
 
@@ -44,12 +51,21 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
+            if (player_one.active):
+                x = int(pygame.mouse.get_pos()[0] / BLOCK_SIZE)
+                y = int(pygame.mouse.get_pos()[1] / BLOCK_SIZE)
+                if abs(player_one.x - x) <= player_one.range and abs(player_one.y - y) <= player_one.range:
+                    player_one.move(x, y)
+                    print(requests.get(F"http://{SERVER}/?player={player_one.name}&x={player_one.x}&y={player_one.y}").text)
+                break
             if (player_one.isClicked(pygame.mouse.get_pos())):
                 player_one.active = not player_one.active
-                print(requests.get(F"http://{SERVER}/?player={player_one.name}&clicked=True").text)
+                print(requests.get(F"http://{SERVER}/?player={player_one.name}&clicked=True&active={player_one.active}").text)
+                break
             if (player_two.isClicked(pygame.mouse.get_pos())):
                 player_two.active = not player_two.active
-                print(requests.get(F"http://{SERVER}/?player={player_two.name}&clicked=True").text)
+                print(requests.get(F"http://{SERVER}/?player={player_two.name}&clicked=True&active={player_two.active}").text)
+                break
 
     screen.fill((0x12,0x12,0x12))
     for x in range(int(SCREEN_SIZE[0]/BLOCK_SIZE)):
